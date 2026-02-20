@@ -1,17 +1,58 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
-        {% block stylesheets %}
-        {% endblock %}
-
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{% block title %}PHP News{% endblock %}</title>
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>📰</text></svg>">
+        <script src="https://cdn.tailwindcss.com"></script>
+        {% block stylesheets %}{% endblock %}
         {% block javascripts %}
             {% block importmap %}{{ importmap('app') }}{% endblock %}
         {% endblock %}
     </head>
-    <body>
-        {% block body %}{% endblock %}
+    <body class="bg-gray-50 min-h-screen flex flex-col">
+        <nav class="bg-white shadow-sm">
+            <div class="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
+                <a href="{{ path('app_homepage') }}" class="text-xl font-bold text-gray-900">
+                    PHP News
+                </a>
+                <div class="flex items-center gap-4">
+                    {% if app.user %}
+                        {# Dashboard link will be added in Step 8 when admin routes exist #}
+                        <form method="post" action="{{ path('session_destroy') }}">
+                            <input type="hidden" name="_csrf_token" value="{{ csrf_token('logout') }}">
+                            <button type="submit"
+                                    class="text-sm text-red-600 hover:text-red-800">Logout</button>
+                        </form>
+                    {% else %}
+                        <a href="{{ path('session_create') }}"
+                           class="text-sm text-gray-600 hover:text-gray-900">Login</a>
+                    {% endif %}
+                </div>
+            </div>
+        </nav>
+
+        <main class="flex-1 max-w-5xl mx-auto px-4 py-8 w-full">
+            {% for message in app.flashes('success') %}
+                <div class="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded mb-4">
+                    {{ message }}
+                </div>
+            {% endfor %}
+
+            {% for message in app.flashes('error') %}
+                <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-4">
+                    {{ message }}
+                </div>
+            {% endfor %}
+
+            {% block body %}{% endblock %}
+        </main>
+
+        <footer class="bg-white border-t mt-auto">
+            <div class="max-w-5xl mx-auto px-4 py-6 text-center text-sm text-gray-500">
+                &copy; {{ "now"|date("Y") }} PHP News. Built with Symfony {{ constant('Symfony\\Component\\HttpKernel\\Kernel::VERSION') }}.
+            </div>
+        </footer>
     </body>
 </html>
