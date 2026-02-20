@@ -185,6 +185,30 @@ class ArticleControllerTest extends WebTestCase
         self::assertSelectorTextContains('h1', 'New Article');
     }
 
+    public function testNewCreatesDuplicateTitleWithUniqueSlug(): void
+    {
+        $this->client->loginUser($this->createAdmin());
+        $this->createArticle('My Article', 'my-article');
+
+        $this->client->request('GET', '/admin/articles/new');
+        $this->client->submitForm('Create Article', [
+            'article[title]' => 'My Article',
+            'article[content]' => 'Different content.',
+        ]);
+
+        self::assertResponseRedirects('/admin/articles');
+
+        // Verify the second article got a suffixed slug.
+        $entityManager = self::getContainer()->get(EntityManagerInterface::class);
+        $articles = $entityManager->getRepository(Article::class)->findBy(['title' => 'My Article']);
+
+        self::assertCount(2, $articles);
+
+        $slugs = array_map(fn (Article $a) => $a->getSlug(), $articles);
+        self::assertContains('my-article', $slugs);
+        self::assertContains('my-article-2', $slugs);
+    }
+
     public function testEditReturns404ForNonExistentArticle(): void
     {
         $this->client->loginUser($this->createAdmin());

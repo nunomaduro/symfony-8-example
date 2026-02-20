@@ -32,6 +32,7 @@ class ArticleController extends AbstractController
         Request $request,
         EntityManagerInterface $entityManager,
         SluggerInterface $slugger,
+        ArticleRepository $articleRepository,
     ): Response {
         $article = new Article();
 
@@ -39,9 +40,8 @@ class ArticleController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $article->setSlug(
-                $slugger->slug($article->getTitle())->lower()->toString(),
-            );
+            $baseSlug = $slugger->slug($article->getTitle())->lower()->toString();
+            $article->setSlug($articleRepository->uniqueSlug($baseSlug));
 
             $entityManager->persist($article);
             $entityManager->flush();
@@ -63,14 +63,14 @@ class ArticleController extends AbstractController
         Request $request,
         EntityManagerInterface $entityManager,
         SluggerInterface $slugger,
+        ArticleRepository $articleRepository,
     ): Response {
         $form = $this->createForm(ArticleType::class, $article);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $article->setSlug(
-                $slugger->slug($article->getTitle())->lower()->toString(),
-            );
+            $baseSlug = $slugger->slug($article->getTitle())->lower()->toString();
+            $article->setSlug($articleRepository->uniqueSlug($baseSlug, $article->getId()));
 
             $entityManager->flush();
 

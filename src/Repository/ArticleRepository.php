@@ -19,6 +19,32 @@ class ArticleRepository extends ServiceEntityRepository
     }
 
     /**
+     * Generate a unique slug, appending -2, -3, etc. if needed.
+     */
+    public function uniqueSlug(string $slug, ?int $excludeId = null): string
+    {
+        $candidate = $slug;
+        $i = 1;
+
+        while (true) {
+            $qb = $this->createQueryBuilder('a')
+                ->select('COUNT(a.id)')
+                ->where('a.slug = :slug')
+                ->setParameter('slug', $candidate);
+
+            if ($excludeId !== null) {
+                $qb->andWhere('a.id != :id')->setParameter('id', $excludeId);
+            }
+
+            if ((int) $qb->getQuery()->getSingleScalarResult() === 0) {
+                return $candidate;
+            }
+
+            $candidate = $slug.'-'.++$i;
+        }
+    }
+
+    /**
      * @return Article[]
      */
     public function findAllOrderedByNewest(): array
