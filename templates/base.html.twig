@@ -19,7 +19,8 @@
                 </a>
                 <div class="flex items-center gap-4">
                     {% if app.user %}
-                        {# Dashboard link will be added in Step 8 when admin routes exist #}
+                        <a href="{{ path('admin_article_index') }}"
+                           class="text-sm text-gray-600 hover:text-gray-900">Dashboard</a>
                         <form method="post" action="{{ path('session_destroy') }}">
                             <input type="hidden" name="_csrf_token" value="{{ csrf_token('logout') }}">
                             <button type="submit"

@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ is_edit ? 'Edit' : 'New' }} Article - Admin{% endblock %}
+
+{% block body %}
+    <div class="max-w-3xl">
+        <h1 class="text-2xl font-bold text-gray-900 mb-6">
+            {{ is_edit ? 'Edit Article' : 'New Article' }}
+        </h1>
+
+        {{ form_start(form, { attr: { class: 'space-y-4' } }) }}
+            <div>
+                {{ form_label(form.title, null, { label_attr: { class: 'block text-sm font-medium text-gray-700 mb-1' } }) }}
+                {{ form_widget(form.title) }}
+                {{ form_errors(form.title) }}
+            </div>
+
+            <div>
+                {{ form_label(form.content, null, { label_attr: { class: 'block text-sm font-medium text-gray-700 mb-1' } }) }}
+                {{ form_widget(form.content) }}
+                {{ form_errors(form.content) }}
+            </div>
+
+            <div class="flex items-center gap-4 pt-4">
+                <button type="submit"
+                        class="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition-colors font-medium">
+                    {{ is_edit ? 'Update Article' : 'Create Article' }}
+                </button>
+                <a href="{{ path('admin_article_index') }}"
+                   class="text-gray-600 hover:text-gray-800">Cancel</a>
+            </div>
+        {{ form_end(form) }}
+    </div>
+{% endblock %}
