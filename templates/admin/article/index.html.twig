@@ -24,8 +24,11 @@
                 <tbody class="divide-y divide-gray-200">
                     {% for article in articles %}
                         <tr>
-                            <td class="px-6 py-4 font-medium text-gray-900">
-                                {{ article.title }}
+                            <td class="px-6 py-4">
+                                <a href="{{ path('app_article_show', { slug: article.slug }) }}"
+                                   class="text-blue-600 hover:text-blue-800 font-medium">
+                                    {{ article.title }}
+                                </a>
                             </td>
                             <td class="px-6 py-4 text-sm text-gray-500">
                                 {{ article.createdAt|date('M d, Y') }}

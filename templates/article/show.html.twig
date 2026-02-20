@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ article.title }} - PHP News{% endblock %}
+
+{% block body %}
+    <article class="max-w-3xl">
+        <header class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-900 mb-3">{{ article.title }}</h1>
+            <div class="flex items-center gap-4 text-sm text-gray-500">
+                <time datetime="{{ article.createdAt|date('Y-m-d') }}">
+                    Published {{ article.createdAt|date('F j, Y') }}
+                </time>
+                {% if article.updatedAt > article.createdAt %}
+                    <span>&middot;</span>
+                    <time datetime="{{ article.updatedAt|date('Y-m-d') }}">
+                        Updated {{ article.updatedAt|date('F j, Y') }}
+                    </time>
+                {% endif %}
+            </div>
+        </header>
+
+        <div class="text-gray-700 leading-relaxed whitespace-pre-line">
+            {{ article.content }}
+        </div>
+
+        <div class="mt-8 pt-6 border-t">
+            <a href="{{ path('app_homepage') }}"
+               class="text-blue-600 hover:text-blue-800 font-medium">&larr; Back to all articles</a>
+        </div>
+    </article>
+{% endblock %}

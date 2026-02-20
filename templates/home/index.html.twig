@@ -5,7 +5,32 @@
 {% block body %}
     <h1 class="text-3xl font-bold text-gray-900 mb-8">Latest Articles</h1>
 
-    <div class="bg-white rounded-lg shadow-sm p-12 text-center">
-        <p class="text-gray-500 text-lg">No articles published yet.</p>
-    </div>
+    {% if articles|length > 0 %}
+        <div class="space-y-6">
+            {% for article in articles %}
+                <article class="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
+                    <h2 class="text-xl font-semibold mb-2">
+                        <a href="{{ path('app_article_show', { slug: article.slug }) }}"
+                           class="text-gray-900 hover:text-blue-600 transition-colors">
+                            {{ article.title }}
+                        </a>
+                    </h2>
+                    <p class="text-sm text-gray-500 mb-3">
+                        {{ article.createdAt|date('F j, Y') }}
+                    </p>
+                    <p class="text-gray-600">
+                        {{ article.content|length > 200 ? article.content|slice(0, 200) ~ '...' : article.content }}
+                    </p>
+                    <a href="{{ path('app_article_show', { slug: article.slug }) }}"
+                       class="inline-block mt-3 text-blue-600 hover:text-blue-800 text-sm font-medium">
+                        Read more &rarr;
+                    </a>
+                </article>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="bg-white rounded-lg shadow-sm p-12 text-center">
+            <p class="text-gray-500 text-lg">No articles published yet.</p>
+        </div>
+    {% endif %}
 {% endblock %}
