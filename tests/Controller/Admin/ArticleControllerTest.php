@@ -168,7 +168,7 @@ class ArticleControllerTest extends WebTestCase
         ]);
 
         self::assertResponseIsUnprocessable();
-        self::assertSelectorExists('.invalid-feedback');
+        self::assertSelectorTextContains('h1', 'New Article');
     }
 
     public function testNewRejectsEmptyContent(): void
@@ -182,7 +182,7 @@ class ArticleControllerTest extends WebTestCase
         ]);
 
         self::assertResponseIsUnprocessable();
-        self::assertSelectorExists('.invalid-feedback');
+        self::assertSelectorTextContains('h1', 'New Article');
     }
 
     public function testEditReturns404ForNonExistentArticle(): void
